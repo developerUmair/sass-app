@@ -1,3 +1,3 @@
 export default function Companions() {
-  return <div>Companions</div>;
+  return <div>Companions LIB</div>;
 }
