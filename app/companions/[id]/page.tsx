@@ -14,6 +14,9 @@ export default async function CompanionSession({params}: CompanionSessionPagePro
   const companion = await getCompanion(id);
   const user = await currentUser();
 
+
+  console.log("user", user);
+
   if(!user) redirect('/sign-in')
   if(!companion) redirect('/companions')
 
