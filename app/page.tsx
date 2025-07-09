@@ -4,15 +4,25 @@ import CallToAction from "@/components/CTA";
 import { recentSessions } from "@/constants";
 import {
   getAllCompanions,
+  getBookmarkedCompanions,
   getRecentSessions,
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
+import { auth } from "@clerk/nextjs/server";
 
-export const dynamic = 'force-dynamic'; 
+export const dynamic = "force-dynamic";
 
 const Page = async () => {
-  const companions = await getAllCompanions({ limit: 3 });
-  const recentSessionsCompanions = await getRecentSessions(10);
+  const { userId } = await auth();
+
+  const [companions, bookmarkedIds, recentSessionsCompanions] =
+    await Promise.all([
+      getAllCompanions({ limit: 3 }),
+      userId ? getBookmarkedCompanions(userId) : [],
+      getRecentSessions(10),
+    ]);
+
+  const set = new Set(bookmarkedIds);
 
   return (
     <main>
@@ -24,6 +34,7 @@ const Page = async () => {
             id="123"
             {...companion}
             color={getSubjectColor(companion.subject)}
+            isBookmarked={set.has(companion.id)}
           />
         ))}
       </section>

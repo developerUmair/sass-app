@@ -6,6 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  getMyBookmarkedCompanions,
   getUserCompanions,
   getUserSessions,
 } from "@/lib/actions/companion.actions";
@@ -20,6 +21,7 @@ export default async function ProfilePage() {
 
   const companions = await getUserCompanions(user?.id);
   const sessionHistory = await getUserSessions(user?.id);
+  const myBookmarkedCompanions = await getMyBookmarkedCompanions(user?.id);
 
   return (
     <main className="min-w-lg:w-3/4">
@@ -68,6 +70,18 @@ export default async function ProfilePage() {
         </div>
       </section>
       <Accordion type="multiple">
+        <AccordionItem value="bookmarks">
+          <AccordionTrigger className="text-2xl font-bold">
+            Bookmarked Companions {`(${myBookmarkedCompanions?.length})`}
+          </AccordionTrigger>
+          <AccordionContent>
+            <CompanionList
+              title="Bookmarks"
+              companions={myBookmarkedCompanions}
+              classNames=""
+            />
+          </AccordionContent>
+        </AccordionItem>
         <AccordionItem value="recent">
           <AccordionTrigger className="text-2xl font-bold">
             Recent Sessions
